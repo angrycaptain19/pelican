@@ -308,11 +308,8 @@ needed by Pelican.
 
     try:
         with open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
-                  'w', encoding='utf-8') as fd:
-            conf_python = dict()
-            for key, value in CONF.items():
-                conf_python[key] = repr(value)
-
+                          'w', encoding='utf-8') as fd:
+            conf_python = {key: repr(value) for key, value in CONF.items()}
             _template = _jinja_env.get_template('pelicanconf.py.jinja2')
             fd.write(_template.render(**conf_python))
             fd.close()

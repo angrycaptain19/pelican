@@ -99,11 +99,11 @@ class Generator:
                 except TemplateNotFound:
                     continue
 
-            if name not in self._templates:
-                raise PelicanTemplateNotFound(
-                    '[templates] unable to load {}[{}] from {}'.format(
-                        name, ', '.join(self.settings['TEMPLATE_EXTENSIONS']),
-                        self._templates_path))
+        if name not in self._templates:
+            raise PelicanTemplateNotFound(
+                '[templates] unable to load {}[{}] from {}'.format(
+                    name, ', '.join(self.settings['TEMPLATE_EXTENSIONS']),
+                    self._templates_path))
 
         return self._templates[name]
 
@@ -124,10 +124,7 @@ class Generator:
             return False
 
         ext = os.path.splitext(basename)[1][1:]
-        if extensions is False or ext in extensions:
-            return True
-
-        return False
+        return extensions is False or ext in extensions
 
     def get_files(self, paths, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
@@ -159,11 +156,16 @@ class Generator:
                     excl = exclusions_by_dirpath.get(dirpath, ())
                     # We copy the `dirs` list as we will modify it in the loop:
                     for d in list(dirs):
-                        if (d in excl or
-                            any(fnmatch.fnmatch(d, ignore)
-                                for ignore in ignores)):
-                            if d in dirs:
-                                dirs.remove(d)
+                        if (
+                            (
+                                d in excl
+                                or any(
+                                    fnmatch.fnmatch(d, ignore)
+                                    for ignore in ignores
+                                )
+                            )
+                        ) and d in dirs:
+                            dirs.remove(d)
 
                     reldir = os.path.relpath(dirpath, self.path)
                     for f in temp_files:
