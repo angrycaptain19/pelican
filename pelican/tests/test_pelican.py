@@ -128,11 +128,7 @@ class TestPelican(LoggedTestCase):
                          locale_available('French'), 'French locale needed')
     def test_custom_locale_generation_works(self):
         '''Test that generation with fr_FR.UTF-8 locale works'''
-        if sys.platform == 'win32':
-            our_locale = 'French'
-        else:
-            our_locale = 'fr_FR.UTF-8'
-
+        our_locale = 'French' if sys.platform == 'win32' else 'fr_FR.UTF-8'
         settings = read_settings(path=SAMPLE_FR_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
